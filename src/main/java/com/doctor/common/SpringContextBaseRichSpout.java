@@ -30,4 +30,10 @@ public abstract class SpringContextBaseRichSpout extends ContextBaseRichSpout {
 		this.context.getAutowireCapableBeanFactory().autowireBean(this);
 	}
 
+	@Override
+	public void close() {
+		this.context.close();
+		super.close();
+	}
+
 }

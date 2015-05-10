@@ -28,4 +28,10 @@ public abstract class SpringContextBaseRichBolt extends ContextBaseRichBolt {
 		this.context.getAutowireCapableBeanFactory().autowireBean(this);
 	}
 
+	@Override
+	public void cleanup() {
+		this.context.close();
+		super.cleanup();
+	}
+
 }
