@@ -22,7 +22,8 @@ public class JstormMain {
 				.fieldsGrouping(JstromComponentConstrant.SplitSentenceBolt_ComponentId, new Fields(JstromComponentConstrant.SplitSentenceBolt_Fields));
 
 		Config config = new Config();
-		// config.setDebug(true);
+		config.setNumWorkers(3);
+		config.setDebug(true);
 		StormSubmitterUtil.submitTopologyLocally(builder.createTopology(), "starter-wordcount", config, 30);
 	}
 }
