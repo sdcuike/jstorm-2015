@@ -5,8 +5,6 @@ topology.acker.executors=1
 topology.debug=true
 
 
-
-
 spout.parallel=1
 bolt.parallel=1
 #send.sleep.second=100
