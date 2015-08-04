@@ -5,14 +5,9 @@ topology.acker.executors=1
 topology.debug=true
 
 
-spout.parallel=1
-bolt.parallel=1
 #send.sleep.second=100
-check.sequence=true
-kryo.enable=false
-fall.back.on.java.serialization=true
+topology.fall.back.on.java.serialization=true
 
-enable.split=false
 
 storm.cluster.mode=local
 #storm.cluster.mode: "distributed"
