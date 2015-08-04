@@ -1,5 +1,9 @@
 package com.doctor.common.util;
 
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.Map.Entry;
+import java.util.Properties;
 import java.util.concurrent.TimeUnit;
 
 import backtype.storm.Config;
@@ -18,9 +22,9 @@ import backtype.storm.generated.StormTopology;
  *
  * @time 2015年5月9日 下午10:36:59
  */
-public interface StormSubmitterUtil {
+public final class StormSubmitterUtil {
 
-	static void submitTopologyLocally(StormTopology topology, String topologyName, Config conf, int runtimeInMinutes) throws InterruptedException {
+	public static void submitTopologyLocally(StormTopology topology, String topologyName, Config conf, int runtimeInMinutes) throws InterruptedException {
 		LocalCluster localCluster = new LocalCluster();
 		localCluster.submitTopology(topologyName, conf, topology);
 		TimeUnit.MINUTES.sleep(runtimeInMinutes);
@@ -28,7 +32,30 @@ public interface StormSubmitterUtil {
 		localCluster.shutdown();
 	}
 
-	static void submitTopologyRemotely(StormTopology topology, String topologyName, Config conf) throws AlreadyAliveException, InvalidTopologyException {
+	public static void submitTopologyRemotely(StormTopology topology, String topologyName, Config conf) throws AlreadyAliveException, InvalidTopologyException {
 		StormSubmitter.submitTopology(topologyName, conf, topology);
+	}
+
+	/**
+	 * 从外部文件载入jstorm配置
+	 * 
+	 * @param propFile
+	 * @return
+	 */
+	public static Config LoadConfigFromPropertyFile(final String propFile) {
+		Properties properties = new Properties();
+
+		try (FileInputStream inputStream = new FileInputStream(propFile)) {
+			properties.load(inputStream);
+		} catch (IOException e) {
+			throw new RuntimeException("load file error:" + propFile, e);
+		}
+
+		Config config = new Config();
+		for (Entry<Object, Object> entry : properties.entrySet()) {
+			config.put(entry.getKey().toString(), entry.getValue());
+		}
+
+		return config;
 	}
 }
