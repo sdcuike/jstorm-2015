@@ -1,0 +1,1 @@
+jstorm jar target/jstorm-2015.jar com.doctor.starter.JstormMain  jstorm-config/conf.prop
