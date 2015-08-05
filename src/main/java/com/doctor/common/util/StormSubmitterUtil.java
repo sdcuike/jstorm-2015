@@ -2,10 +2,15 @@ package com.doctor.common.util;
 
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.concurrent.TimeUnit;
 
+import org.apache.commons.io.IOUtils;
+
+import clojure.main;
 import backtype.storm.Config;
 import backtype.storm.LocalCluster;
 import backtype.storm.StormSubmitter;
@@ -23,6 +28,26 @@ import backtype.storm.generated.StormTopology;
  * @time 2015年5月9日 下午10:36:59
  */
 public final class StormSubmitterUtil {
+	
+	private static final String topologyDefaultConfig = "jstorm-config/conf.prop";
+	
+	
+	/**
+	 * 从本地jar本资源路径下搜寻默认配置：jstorm-config/conf.prop
+	 * 
+	 * @param topology
+	 * @throws IOException 
+	 * @throws InvalidTopologyException 
+	 * @throws AlreadyAliveException 
+	 * @throws InterruptedException 
+	 */
+	public static void submitTopology(final StormTopology topology) throws IOException, InterruptedException, AlreadyAliveException, InvalidTopologyException{
+		 InputStream inputStream = StormSubmitterUtil.class.getClassLoader().getResourceAsStream(topologyDefaultConfig);
+		
+		 Config config = LoadConfigFromInputStream(inputStream);
+		 submitTopology(topology, config);
+	}
+
 
 	/**
 	 * Topology 的Config从配置文件中读取
@@ -72,19 +97,23 @@ public final class StormSubmitterUtil {
 	 * @return
 	 */
 	public static Config LoadConfigFromPropertyFile(final String propFile) {
-		Properties properties = new Properties();
+		 
 
 		try (FileInputStream inputStream = new FileInputStream(propFile)) {
-			properties.load(inputStream);
+			return LoadConfigFromInputStream(inputStream);
 		} catch (IOException e) {
 			throw new RuntimeException("load file error:" + propFile, e);
 		}
-
+	}
+	
+	private static Config LoadConfigFromInputStream(final InputStream inputStream) throws IOException{
+		Properties properties = new Properties();
+		properties.load(inputStream);
+		
 		Config config = new Config();
 		for (Entry<Object, Object> entry : properties.entrySet()) {
 			config.put(entry.getKey().toString(), entry.getValue());
 		}
-
 		return config;
 	}
 
