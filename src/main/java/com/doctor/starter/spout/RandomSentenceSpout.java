@@ -50,4 +50,14 @@ public class RandomSentenceSpout extends SpringContextBaseRichSpout {
 		super.close();
 	}
 
+	@Override
+	public void ack(Object msgId) {
+		 
+	}
+
+	@Override
+	public void fail(Object msgId) {
+		
+	}
+
 }
