@@ -1,6 +1,8 @@
 package com.doctor.starter;
 
 import backtype.storm.Config;
+import backtype.storm.generated.AlreadyAliveException;
+import backtype.storm.generated.InvalidTopologyException;
 import backtype.storm.topology.TopologyBuilder;
 import backtype.storm.tuple.Fields;
 
@@ -12,7 +14,7 @@ import com.doctor.starter.spout.RandomSentenceSpout;
 
 public class JstormMain {
 
-	public static void main(String[] args) throws InterruptedException {
+	public static void main(String[] args) throws InterruptedException, AlreadyAliveException, InvalidTopologyException {
 		TopologyBuilder builder = new TopologyBuilder();
 
 		builder.setSpout(JstromComponentConstrant.RandomSentenceSpout_ComponentId, new RandomSentenceSpout(), 1);
@@ -24,6 +26,7 @@ public class JstormMain {
 		Config config = new Config();
 		config.setNumWorkers(3);
 		config.setDebug(true);
-		StormSubmitterUtil.submitTopologyLocally(builder.createTopology(), "starter-wordcount", config, 30);
+//		StormSubmitterUtil.submitTopologyLocally(builder.createTopology(), "starter-wordcount", config, 30);
+		StormSubmitterUtil.submitTopologyRemotely(builder.createTopology(), "starter-wordcount", config);
 	}
 }
