@@ -34,6 +34,8 @@ public class WordCountBolt extends ContextBaseRichBolt {
 			map.put(word, count);
 			log.info("WordCountBolt:" + word + "=" + count);
 		}
+		
+		this.collector.ack(input);
 	}
 
 	@Override

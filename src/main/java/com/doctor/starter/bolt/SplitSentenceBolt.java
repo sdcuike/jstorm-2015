@@ -36,6 +36,7 @@ public class SplitSentenceBolt extends SpringContextBaseRichBolt {
 		for (String string : str) {
 			this.collector.emit(new Values(string));
 		}
+		this.collector.ack(input);
 	}
 
 	@Override
